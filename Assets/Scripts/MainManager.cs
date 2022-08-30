@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 public class MainManager : MonoBehaviour
 {
     public static MainManager Instance;
-    // Start is called before the first frame update
+
+    public int woodQuantity;
+    public int rockQuantity;
 
     private void Awake()
     {
@@ -17,17 +20,7 @@ public class MainManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
-    }
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        LoadResources();
     }
 
     [System.Serializable]
@@ -36,6 +29,29 @@ public class MainManager : MonoBehaviour
         public int woodQuantity;
         public int rockQuantity;
     }
+    public void SaveResources()
+    {
+    SaveData data = new SaveData();
+    data.woodQuantity = woodQuantity;
+    data.rockQuantity = rockQuantity;
+
+    string json = JsonUtility.ToJson(data);
+  
+    File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void LoadResources()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+            {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            woodQuantity = data.woodQuantity;
+            rockQuantity = data.rockQuantity;
+            }
+        }
 
     
 }

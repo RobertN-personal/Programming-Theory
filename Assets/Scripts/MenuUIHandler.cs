@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,11 +27,19 @@ public class MenuUIHandler : MonoBehaviour
 
     public void ExitGame()
     {
+        MainManager.Instance.SaveResources();
          
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else
         Application.Quit(); // original code to quit Unity player
 #endif
+    }
+
+    public void BackToMenu()
+    {
+        MainManager.Instance.SaveResources();
+        SceneManager.LoadScene(0);
+        
     }
 }
